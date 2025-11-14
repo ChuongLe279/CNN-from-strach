@@ -13,7 +13,7 @@ def Convolution_Function(image, kernels,bias=None, stride=1, padding =0,activati
         input_image = np.pad(input_image, ((0, 0), (padding, padding), (padding, padding)), mode='constant')
     
     #Tinh kich thuoc dau ra
-    out_h=int((h-hk+2*padding)/stride) +1
+    out_h=int((h-hk+2*padding)/stride)+1
     out_w=int((w-wk+2*padding)/stride)+1
 
     #Khoi tao gia tri dau ra
