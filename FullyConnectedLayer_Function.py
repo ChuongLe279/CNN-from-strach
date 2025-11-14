@@ -1,3 +1,5 @@
+import numpy as np
+
 class FullyConected:
     def __init__(self, in_features, out_features):
         scale = np.sqrt(1. / in_features)

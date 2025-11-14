@@ -21,31 +21,34 @@ class Convolution:
     def forward(self, image):
         # lay kich thuoc input va kernel
         c, h, w = image.shape
-        hk, wk = self.kernels_size
+        hk, wk = self.kernel_size
         filters = self.out_channels
 
         # kiem tra so kenh hop le
-        assert c == self.out_channels, "Error"
+        assert c == self.in_channels, "Error"
 
         #them padding (0)
         p = self.padding
-        s = self.s
+        s = self.stride
         if p > 0:
-            input_image = np.pad(input_image, ((0, 0), (p, p), (p, p)), mode='constant')
+            image = np.pad(image, ((0, 0), (p, p), (p, p)), mode='constant')
+        
+        # Store padded image for backward pass
+        self.X_padded = image
         
         #Tinh kich thuoc dau ra
-        out_h = int((h - hk + 2*p) / s) + 1
-        out_w = int((w - wk + 2*p) / s) + 1
+        out_h = int((h + 2*p - hk) / s) + 1
+        out_w = int((w + 2*p - wk) / s) + 1
 
         #Khoi tao gia tri dau ra
-        output = np.zeros((filters,out_h, out_w))
+        output = np.zeros((filters, out_h, out_w))
 
         #tich chap tung filter
         for f in range(filters):
-                for i in range(out_h):
-                    for j in range(out_w):
-                        region = image[:,i*s : i*s + hk, j*s : j*s + wk]
-                        output[f,i,j] = np.sum(region * self.weights[f]) + self.bias[f]
+            for i in range(out_h):
+                for j in range(out_w):
+                    region = image[:, i*s : i*s + hk, j*s : j*s + wk]
+                    output[f, i, j] = np.sum(region * self.weights[f]) + self.bias[f]
         return output
     
     def backprop(self, dY, learning_rate):
