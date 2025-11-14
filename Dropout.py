@@ -1,3 +1,5 @@
+import numpy as np
+
 class Layer_Dropout:
     # Initialize the dropout layer
     def __init__(self, rate):
