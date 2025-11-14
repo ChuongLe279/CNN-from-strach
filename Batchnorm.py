@@ -19,13 +19,13 @@ class BatchNorm(tf.keras.layers.Layer):
         self.gamma = self.add_weight(
             name = 'gamma',
             shape = weight_shape,
-            initializer = tf.initializer.ones, 
+            initializer = tf.initializers.ones, 
             trainable = True
         )
         self.beta = self.add_weight(
             name = 'beta',
             shape = weight_shape,
-            initializer = tf.initializer.zeros, 
+            initializer = tf.initializers.zeros, 
             trainable = True
         )
         self.moving_mean = self.add_weight(

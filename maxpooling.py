@@ -9,25 +9,25 @@ class maxPooling:
 
     def sliding_window(self, image):
         # Compute the ouput size
-        new_height = (image.shape[0] - self.kernel_size) // self.stride + 1 
-        new_width = (image.shape[1] - self.kernel_size) // self.stride + 1 
+        new_height = (image.shape[1] - self.kernel_size) // self.stride + 1 
+        new_width = (image.shape[2] - self.kernel_size) // self.stride + 1 
 
         # Store for backprop 
         self.last_image = image 
          
         for i in range(new_height): 
             for j in range(new_width): 
-                patch = image[(i*self.stride):(i*self.stride + self.kernel_size), 
+                patch = image[:, (i*self.stride):(i*self.stride + self.kernel_size), 
                               (j*self.stride):(j*self.stride + self.kernel_size)]
                 yield patch, i, j
 
     def forward(self, image): 
 
-        height, width, num_filters = image.shape 
-        output = np.zeros(((height - self.kernel_size)//self.stride + 1, (width - self.kernel_size)//self.stride + 1, num_filters))
+        num_filters, height, width = image.shape 
+        output = np.zeros((num_filters, (height - self.kernel_size)//self.stride + 1, (width - self.kernel_size)//self.stride + 1))
 
         for patch, i, j in self.sliding_window(image): 
-            output = np.amax(patch, axis=(0, 1))
+            output[:, i, j] = np.amax(patch, axis=(1, 2))
 
         return output
     
